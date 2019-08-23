@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>338445601613-jbrmf68immbdv372ssb5gbibv9dot6nt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.338445601613-jbrmf68immbdv372ssb5gbibv9dot6nt</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBKsmvMUD8pVddB84J2sGNMGSZx-Az0uR8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>338445601613</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>piso.flutter.galaxy</string>
+	<key>PROJECT_ID</key>
+	<string>galaxy-e2396</string>
+	<key>STORAGE_BUCKET</key>
+	<string>galaxy-e2396.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:338445601613:ios:cbe0b36b5d6cb103</string>
+	<key>DATABASE_URL</key>
+	<string>https://galaxy-e2396.firebaseio.com</string>
+</dict>
+</plist>
