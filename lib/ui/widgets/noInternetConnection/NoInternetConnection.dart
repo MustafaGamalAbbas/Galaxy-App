@@ -1,130 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/FetchingFromSharedPreference_bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/FetchingFromSharedPreference_event.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/bloc.dart';
 import 'package:galaxy/styles/Text_Style.dart';
 import 'package:galaxy/ui/widgets/home/HomeWidget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NoInternetConnectionWidget extends StatelessWidget {
-  int backgroundColor;
-  Future<int> _getSavedAppBarColors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    backgroundColor = (prefs.getInt('background') ?? Colors.deepPurple.value);
-    return (prefs.getInt('background') ?? Colors.deepPurple.value);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: FutureBuilder<int>(
-          future: _getSavedAppBarColors(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.active:
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return Container();
-              case ConnectionState.done:
-              default: 
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                    ),
-                    ClipPath(
-                      child: Container(
-                        color: Color(backgroundColor),
+      child: BlocProvider(
+        builder: (context) => FetchingSharedPreferenceBloc()..dispatch(BackGroundColor()),
+        child: BlocBuilder<FetchingSharedPreferenceBloc,
+            FetchingSharedPreferenceState>(builder: (context, state) {
+          if (state is BackgroundSharedpreferenceState)
+            return Stack(
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                ),
+                ClipPath(
+                  child: Container(
+                    color: Color(state.background),
+                  ),
+                  clipper: CurveClipper(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 50),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          "No Internet Connection",
+                          style: Style.subHeaderTextStyle.copyWith(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      clipper: CurveClipper(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 50),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Center(
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 28),
+                        child: Center(
+                          child: Text(
+                            "You are not connected to the internet, Make sure WiFi is on, Airplane mode is off and try again.",
+                            textAlign: TextAlign.center,
+                            style: Style.subHeaderTextStyle.copyWith(
+                              color: Colors.white70,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: Container(
+                          width: 150,
+                          child: RawMaterialButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => new HomeWidget()));
+                            },
+                            shape: StadiumBorder(),
+                            fillColor: Colors.white,
+                            splashColor: Colors.white70,
                             child: Text(
-                              "No Internet Connection",
-                              style: Style.subHeaderTextStyle.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 24,
+                              "Retry",
+                              style: TextStyle(
+                                  color: Color(state.background),
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 28),
-                            child: Center(
-                              child: Text(
-                                "You are not connected to the internet, Make sure WiFi is on, Airplane mode is off and try again.",
-                                textAlign: TextAlign.center,
-                                style: Style.subHeaderTextStyle.copyWith(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 32.0),
-                            child: Container(
-                              width: 150,
-                              child: RawMaterialButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      new MaterialPageRoute(
-                                          builder: (context) =>
-                                              new HomeWidget()));
-                                },
-                                shape: StadiumBorder(),
-                                fillColor: Colors.white,
-                                splashColor: Colors.white70,
-                                child: Text(
-                                  "Retry",
-                                  style: TextStyle(
-                                      color: Color(backgroundColor),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            height: 4,
-                            width: 250,
-                            color: Colors.white,
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 64.0),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                            height: 250,
-                            width: 250,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(
-                                    "assets/images/no internet connection 1 .png"),
-                                fit: BoxFit.fill,
-                              ),
-                            )),
-                      ),
-                    )
-                  ],
-                );
-            }
-          }),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 4,
+                        width: 250,
+                        color: Colors.white,
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 64.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        height: 250,
+                        width: 250,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                "assets/images/no internet connection 1 .png"),
+                            fit: BoxFit.fill,
+                          ),
+                        )),
+                  ),
+                )
+              ],
+            );
+          else {
+            new Container(width: 0.0, height: 0.0);
+          }
+        }),
+      ),
     );
   }
 }

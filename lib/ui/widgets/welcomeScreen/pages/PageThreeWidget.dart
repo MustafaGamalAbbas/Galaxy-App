@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
- 
+
 class _PageThreeViewState extends State<PageThreeView>
     with TickerProviderStateMixin {
-  double  _padding = 16;
+  double _padding = 16;
   final String imageURL;
   double _width = 0;
   _PageThreeViewState(this.imageURL);
@@ -12,8 +12,9 @@ class _PageThreeViewState extends State<PageThreeView>
 
   initState() {
     super.initState();
+
     milkyController =
-        AnimationController(duration: const Duration(seconds:1), vsync: this);
+        AnimationController(duration: const Duration(seconds: 1), vsync: this);
     galaxyController =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     livingController =
@@ -39,12 +40,21 @@ class _PageThreeViewState extends State<PageThreeView>
   }
 
   @override
+  void dispose() {
+    milkyController.dispose();
+    galaxyController.dispose();
+    livingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((duration) {
-      setState(() {
-        _width = 150;
-        _padding = 8;
-      });
+      if (mounted)
+        setState(() {
+          _width = 150;
+          _padding = 8;
+        });
     });
     return Stack(
       children: <Widget>[
@@ -111,10 +121,10 @@ class _PageThreeViewState extends State<PageThreeView>
                 child: new Text(
                   "has over 200 billion",
                   style: TextStyle(
-                      fontSize: 38,
-                      color: Colors.white,
-                      fontStyle: FontStyle.normal,
-                      ),
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontStyle: FontStyle.normal,
+                  ),
                 ),
               ),
               SizedBox(
@@ -140,7 +150,6 @@ class _PageThreeViewState extends State<PageThreeView>
 
 class PageThreeView extends StatefulWidget {
   final String imageURL;
-   const PageThreeView(this.imageURL, {Key key}) : super(key: key);
+  const PageThreeView(this.imageURL, {Key key}) : super(key: key);
   _PageThreeViewState createState() => _PageThreeViewState(imageURL);
 }
- 

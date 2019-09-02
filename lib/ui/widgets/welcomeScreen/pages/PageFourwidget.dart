@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:galaxy/animtions/PulseAnimator.dart';
+import 'package:galaxy/bloc/savingToSharePreference/SavingToSharePreference_bloc.dart';
+import 'package:galaxy/bloc/savingToSharePreference/SavingToSharePreference_event.dart';
 import 'package:galaxy/ui/widgets/loginWidget/LoginWidget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class _PageFourViewState extends State<PageFourView>
     with TickerProviderStateMixin {
@@ -33,9 +34,9 @@ class _PageFourViewState extends State<PageFourView>
   initState() {
     animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
- 
 
     super.initState();
+    _savingBloc = new SavingToSharePreferenceBloc();
 
     milkyController =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
@@ -74,7 +75,6 @@ class _PageFourViewState extends State<PageFourView>
     animationController.forward();
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // galaxyController.forward();
         animationController.reverse();
       } else if (status == AnimationStatus.dismissed) {}
     });
@@ -86,15 +86,10 @@ class _PageFourViewState extends State<PageFourView>
       Future.delayed(new Duration(seconds: 1), () {
         knowMoreController.forward();
       });
-    } catch (e) {
-     }
+    } catch (e) {}
   }
 
-  _setIsFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isFirstTime', false);
-  }
-
+  SavingToSharePreferenceBloc _savingBloc;
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((duration) {
@@ -116,7 +111,7 @@ class _PageFourViewState extends State<PageFourView>
               padding: const EdgeInsets.all(0.0),
               child: Container(
                   decoration: BoxDecoration(
-                  image: DecorationImage(
+                image: DecorationImage(
                   image: AssetImage(imageURL),
                   fit: BoxFit.fill,
                 ),
@@ -192,7 +187,6 @@ class _PageFourViewState extends State<PageFourView>
                 child: AnimatedContainer(
                     duration: Duration(seconds: 1),
                     width: _getStartWidth,
-                    //color:_animateColor.value,
                     height: 48,
                     curve: Curves.easeIn,
                     decoration: BoxDecoration(
@@ -218,13 +212,13 @@ class _PageFourViewState extends State<PageFourView>
                         fillColor: new Color(0xff00c6ff),
                         splashColor: new Color(0xFF3366FF),
                         onPressed: () {
-                          _setIsFirstTime();
+                          _savingBloc.dispatch(IsFirstTimeEvent(false));
                           Navigator.pushReplacement(
                               context,
                               new MaterialPageRoute(
                                   builder: (context) => new LoginWidget()));
                         })),
-              )
+              ),
             ],
           ),
         ),

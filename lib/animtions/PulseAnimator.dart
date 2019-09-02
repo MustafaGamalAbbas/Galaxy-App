@@ -30,6 +30,11 @@ class _PulseAnimatorState extends State<PulseAnimator>
       ),
     );
   }
+  @override
+  void dispose() {
+    controller.dispose(); 
+     super.dispose();
+  }
 }
 
 class TweenAndBack<T> extends Tween<T> {

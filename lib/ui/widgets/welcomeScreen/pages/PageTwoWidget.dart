@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
- 
+
 class _PageTwoViewState extends State<PageTwoView>
     with TickerProviderStateMixin {
   double _padding = 16;
@@ -12,8 +12,9 @@ class _PageTwoViewState extends State<PageTwoView>
 
   initState() {
     super.initState();
+
     milkyController =
-        AnimationController(duration: const Duration(seconds:1), vsync: this);
+        AnimationController(duration: const Duration(seconds: 1), vsync: this);
     galaxyController =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     livingController =
@@ -41,10 +42,11 @@ class _PageTwoViewState extends State<PageTwoView>
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((duration) {
-      setState(() {
-        _width = 150;
-        _padding = 8;
-      });
+      if (mounted)
+        setState(() {
+          _width = 150;
+          _padding = 8;
+        });
     });
     return Stack(
       children: <Widget>[
@@ -111,10 +113,10 @@ class _PageTwoViewState extends State<PageTwoView>
                 child: new Text(
                   "Has a black hole ",
                   style: TextStyle(
-                      fontSize: 38,
-                      color: Colors.white,
-                      fontStyle: FontStyle.normal,
-                      ),
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontStyle: FontStyle.normal,
+                  ),
                 ),
               ),
               SizedBox(
@@ -136,6 +138,14 @@ class _PageTwoViewState extends State<PageTwoView>
       ],
     );
   }
+
+  @override
+  void dispose() {
+    milkyController.dispose();
+    galaxyController.dispose();
+    livingController.dispose();
+    super.dispose();
+  }
 }
 
 class PageTwoView extends StatefulWidget {
@@ -144,4 +154,3 @@ class PageTwoView extends StatefulWidget {
   const PageTwoView(this.imageURL, {Key key}) : super(key: key);
   _PageTwoViewState createState() => _PageTwoViewState(imageURL);
 }
- 

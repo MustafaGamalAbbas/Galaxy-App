@@ -1,18 +1,23 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:galaxy/repositories/base_repositories/firebase_repository/base_serializable.dart';
+import 'package:json_annotation/json_annotation.dart';
+ 
+part 'Planet.g.dart';
 
-class Planet {
-  final String id;
-  final String name;
-  final String location;
-  final String distance;
-  final String gravity;
-  final String description;
-  final String image;
-  final String picture;
-  final String youtubeVideoId;
-
-  const Planet(
-      {this.id,
+@JsonSerializable()
+class Planet extends BaseSerializable {
+   String id;
+   String name;
+   String location;
+   String distance;
+   String gravity;
+   String description;
+   String image;
+   String picture;
+   String youtubeVideoId;
+    
+   Planet(
+      this.id,
       this.name,
       this.location,
       this.distance,
@@ -20,9 +25,13 @@ class Planet {
       this.description,
       this.image,
       this.picture,
-      this.youtubeVideoId});
+      this.youtubeVideoId) : super.fromJson(null);
+  
+  factory Planet.fromJson(Map<String, dynamic> json) => _$PlanetFromJson(json);
+  Map<String, dynamic> toJson() => _$PlanetToJson(this);
 
-  Planet.fromSnapshot(DataSnapshot snapshot)
+
+ /* Planet.fromSnapshot(DataSnapshot snapshot)
       : id = snapshot.value["id"],
         name = snapshot.value["name"],
         location = snapshot.value["location"],
@@ -31,7 +40,7 @@ class Planet {
         description = snapshot.value["description"],
         image = snapshot.value["image"],
         picture = snapshot.value["picture"],
-        youtubeVideoId = snapshot.value["youtubeVideoId"];
+        youtubeVideoId = snapshot.value["youtubeVideoId"];*/
 }
-
+ 
 List<Planet> planets = new List<Planet>();

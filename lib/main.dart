@@ -1,14 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:galaxy/authenticator/bloc/auth/bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/FetchingFromSharedPreference_bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/bloc.dart';
+import 'package:galaxy/bloc/internetConnection/bloc.dart';
 import 'package:galaxy/ui/widgets/home/HomeWidget.dart';
 import 'package:galaxy/ui/widgets/loginWidget/LoginWidget.dart';
 import 'package:galaxy/ui/widgets/noInternetConnection/NoInternetConnection.dart';
 import 'package:galaxy/ui/widgets/welcomeScreen/WelcomeWidget.dart';
-import 'package:galaxy/utilities/ConnectionStatus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-final databaseReference = FirebaseDatabase.instance.reference();
 
 void main() => runApp(MyApp());
 
@@ -59,40 +58,42 @@ class Home extends State<MyHomePage> {
     super.initState();
   }
 
-  Future<bool> isFristTime() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getBool("isFirstTime");
-  }
   @override
   Widget build(BuildContext context) {
-     Future<FirebaseUser> _getUser() async{
-      return await FirebaseAuth.instance.currentUser(); 
-    }
-    return FutureBuilder<bool>(
-        future: ConnectionStatusSingleton.getInstance().checkConnection(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data) {
-            return FutureBuilder<SharedPreferences>(
-                future: SharedPreferences.getInstance(),
-                builder: (context, snapshot) {
-                  if (snapshot.data.getBool("isFirstTime") == null)
-                    return WelcomeWidget();
-                  else{
-                    return FutureBuilder<FirebaseUser>(
-                      future: _getUser(),
-                      builder: (context, snapshot) {
-                        if(snapshot.hasData&& snapshot.data!=null)
+    
+
+    return BlocProvider(
+        builder: (context) => InternetconnectionBloc(),
+        child: BlocBuilder<InternetconnectionBloc, InternetconnectionState>(
+            builder: (context, snapshot) {
+          if (snapshot is Connected) {
+            return BlocProvider(
+              builder: (context) => FetchingSharedPreferenceBloc()..dispatch(IsFirstTime()),
+              child: BlocBuilder<FetchingSharedPreferenceBloc,
+                  FetchingSharedPreferenceState>(builder: (context, state) {
+                if (state is FirstTimeSharedpreferenceState &&
+                    state.isFirstTime)
+                  return WelcomeWidget();
+                else {
+                  return BlocProvider(
+                    builder: (context) =>
+                        AuthenticationBloc()..dispatch(CurrentStatus()),
+                    child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                        builder: (context, status) {
+                      if (status is Authenticated)
                         return HomeWidget();
-                        else 
-                         return LoginWidget();
-                      }
-                    );
-                  }  
-                });
-          }
-          else{
+                      else
+                        return LoginWidget();
+                    }),
+                  );
+                }
+              }),
+            );
+          } else if (snapshot is Disconnected) {
             return NoInternetConnectionWidget();
           }
-        });
+          else 
+          return Container(height: 0.0,width: 0.0,);
+        }));
   }
 }

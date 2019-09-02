@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
- 
+
 class _PageOneViewState extends State<PageOneView>
     with TickerProviderStateMixin {
-  double  _padding = 16;
+  double _padding = 16;
   final String imageURL;
   double _width = 0;
   _PageOneViewState(this.imageURL);
@@ -12,8 +12,9 @@ class _PageOneViewState extends State<PageOneView>
 
   initState() {
     super.initState();
+
     milkyController =
-        AnimationController(duration: const Duration(seconds:1), vsync: this);
+        AnimationController(duration: const Duration(seconds: 1), vsync: this);
     galaxyController =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     livingController =
@@ -41,10 +42,11 @@ class _PageOneViewState extends State<PageOneView>
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((duration) {
-      setState(() {
-        _width = 150;
-        _padding = 8;
-      });
+      if (mounted)
+        setState(() {
+          _width = 150;
+          _padding = 8;
+        });
     });
     return Stack(
       children: <Widget>[
@@ -135,6 +137,14 @@ class _PageOneViewState extends State<PageOneView>
       ],
     );
   }
+
+  @override
+  void dispose() {
+    milkyController.dispose();
+    galaxyController.dispose();
+    livingController.dispose();
+    super.dispose();
+  }
 }
 
 class PageOneView extends StatefulWidget {
@@ -142,4 +152,3 @@ class PageOneView extends StatefulWidget {
   const PageOneView(this.imageURL, {Key key}) : super(key: key);
   _PageOneViewState createState() => _PageOneViewState(imageURL);
 }
- 

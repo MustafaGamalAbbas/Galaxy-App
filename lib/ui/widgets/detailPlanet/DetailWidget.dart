@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/FetchingFromSharedPreference_bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/FetchingFromSharedPreference_event.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/bloc.dart';
 import 'package:galaxy/models/Planet.dart';
 import 'package:galaxy/styles/Text_Style.dart';
 import 'package:galaxy/ui/customWidgets/Separator.dart';
 import 'package:galaxy/ui/dialogs/YoutubePlayerDialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'PlanetDetailCard.dart';
 
@@ -33,7 +36,7 @@ class DetailScreen extends State<StatefulWidget> {
     );
   }
 
-  Container _getGradient() {
+  Container _getGradient(backgroundColor) {
     return new Container(
       margin: new EdgeInsets.only(top: 190.0),
       height: 110.0,
@@ -120,35 +123,32 @@ class DetailScreen extends State<StatefulWidget> {
     );
   }
 
-  int backgroundColor;
-  Future<int> _getSavedAppBarColors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    backgroundColor = (prefs.getInt('background') ?? Colors.deepPurple.value);
-    return (prefs.getInt('background') ?? Colors.deepPurple.value);
-  }
+   
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: FutureBuilder(
-          future: _getSavedAppBarColors(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData)
-              return new Container(
-                constraints: new BoxConstraints.expand(),
-                color: new Color(backgroundColor),
-                child: new Stack(
-                  children: <Widget>[
-                    _getBackground(),
-                    _getGradient(),
-                    _getContent(),
-                    _getToolbar(context),
-                  ],
-                ),
-              );
-            else
-              return Container();
-          }),
+      body: BlocProvider(
+        builder: (context)=> FetchingSharedPreferenceBloc()..dispatch(BackGroundColor()),
+              child: BlocBuilder<FetchingSharedPreferenceBloc , FetchingSharedPreferenceState>(
+             builder: (context, state) {
+              if (state is BackgroundSharedpreferenceState)
+                return new Container(
+                  constraints: new BoxConstraints.expand(),
+                  color: new Color(state.background),
+                  child: new Stack(
+                    children: <Widget>[
+                      _getBackground(),
+                      _getGradient(state.background),
+                      _getContent(),
+                      _getToolbar(context),
+                    ],
+                  ),
+                );
+              else
+                return Container();
+            }),
+      ),
     );
   }
 }

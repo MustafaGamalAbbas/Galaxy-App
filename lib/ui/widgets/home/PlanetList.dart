@@ -1,67 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:galaxy/bloc/fetchingSharedPreference/bloc.dart';
+import 'package:galaxy/bloc/planets/bloc.dart';
 import 'package:galaxy/models/Planet.dart';
 import 'package:galaxy/ui/widgets/home/planetCard/PlanetCard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PlanetsListWidget extends StatefulWidget {
-  final List<Planet> _planets;
-
-  PlanetsListWidget(this._planets);
-  _PlanetsListWidgetState createState() => _PlanetsListWidgetState(_planets);
+ 
+  _PlanetsListWidgetState createState() => _PlanetsListWidgetState();
 }
 
 class _PlanetsListWidgetState extends State<PlanetsListWidget> {
-  final List<Planet> _planets;
+   List<Planet> _planets= new List<Planet> ();
 
-  _PlanetsListWidgetState(this._planets);
-  int backgroundColor;
-  Future<int> _getSavedAppBarColors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    backgroundColor = (prefs.getInt('background') ?? Colors.deepPurple.value);
-    return (prefs.getInt('background') ?? Colors.deepPurple.value);
-  }
+  _PlanetsListWidgetState();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _getSavedAppBarColors(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData)
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return new Expanded(
-                  flex: 1,
-                  child: new Container(),
-                );
-              case ConnectionState.done:
-              default:
-                return new Expanded(
-                  flex: 1,
-                  child: new Container(
-                    color: new Color(backgroundColor),
-                    child: new CustomScrollView(
-                      scrollDirection: Axis.vertical,
-                      slivers: <Widget>[
-                        new SliverPadding(
-                          padding: const EdgeInsets.symmetric(vertical: 24.0),
-                          sliver: new SliverFixedExtentList(
+    final FetchingSharedPreferenceBloc _bloc  =FetchingSharedPreferenceBloc()..dispatch(BackGroundColor());
+   
+    return BlocProvider(
+
+      builder: (context) => _bloc,
+      child: BlocBuilder<FetchingSharedPreferenceBloc,
+          FetchingSharedPreferenceState>(builder: (context, state) {
+        if (state is BackgroundSharedpreferenceState) {
+           return BlocProvider(
+             builder: (context)=>PlanetsBloc()..dispatch(GetPlanetsListEvent()),
+                        child: BlocBuilder<PlanetsBloc, PlanetsState>(
+                          builder: (context, snapshot) {
+                            if(snapshot is OnReceiveDataState )
+                              _planets = planets = snapshot.planets ; 
+                            return new Expanded(
+              flex: 1,
+              child: new Container(
+                color: new Color(state.background),
+                child: new CustomScrollView(
+                  scrollDirection: Axis.vertical,
+                  slivers: <Widget>[
+                    new SliverPadding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      sliver: new SliverFixedExtentList(
                             itemExtent: 152.0,
                             delegate: new SliverChildBuilderDelegate(
-                              (context, index) =>
-                                  new PlanetCard(_planets[index]),
+                              (context, index) => new PlanetCard(_planets[index]),
                               childCount: _planets.length,
                             ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                );
-            }
-          else
-            return new Container();
-        });
+                  ],
+                ),
+              ),
+          );
+                          }
+                        ),
+           );
+        } else
+          return new Container(height: 0.0,width: 0.0,);
+      }),
+    );
   }
 }
 
@@ -69,52 +66,38 @@ class PlanetsList extends StatelessWidget {
   final List<Planet> _planets;
 
   PlanetsList(this._planets);
-  int backgroundColor;
-  Future<int> _getSavedAppBarColors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-   
-    backgroundColor = (prefs.getInt('background') ?? Colors.deepPurple.value);
-    return (prefs.getInt('background') ?? Colors.deepPurple.value);
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _getSavedAppBarColors(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData)
-            switch (snapshot.connectionState) {
-              case ConnectionState.active:
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return new Container();
-              case ConnectionState.done:
-              default:
-                return new Expanded(
-                  flex: 1,
-                  child: new Container(
-                    color: new Color(backgroundColor),
-                    child: new CustomScrollView(
-                      scrollDirection: Axis.vertical,
-                      slivers: <Widget>[
-                        new SliverPadding(
-                          padding: const EdgeInsets.symmetric(vertical: 24.0),
-                          sliver: new SliverFixedExtentList(
-                            itemExtent: 152.0,
-                            delegate: new SliverChildBuilderDelegate(
-                              (context, index) =>
-                                  new PlanetCard(_planets[index]),
-                              childCount: _planets.length,
-                            ),
-                          ),
-                        ),
-                      ],
+    return BlocProvider(
+      builder: (context) => FetchingSharedPreferenceBloc()..dispatch(BackGroundColor()),
+      child: BlocBuilder<FetchingSharedPreferenceBloc,
+          FetchingSharedPreferenceState>(builder: (context, state) {
+        if (state is BackgroundSharedpreferenceState)
+          return new Expanded(
+            flex: 1,
+            child: new Container(
+              color: new Color(state.background),
+              child: new CustomScrollView(
+                scrollDirection: Axis.vertical,
+                slivers: <Widget>[
+                  new SliverPadding(
+                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    sliver: new SliverFixedExtentList(
+                      itemExtent: 152.0,
+                      delegate: new SliverChildBuilderDelegate(
+                        (context, index) => new PlanetCard(_planets[index]),
+                        childCount: _planets.length,
+                      ),
                     ),
                   ),
-                );
-            }
-          else
-            return new Container();
-        });
+                ],
+              ),
+            ),
+          );
+        else
+          return  new Container(width: 0.0, height: 0.0);
+      }),
+    );
   }
 }

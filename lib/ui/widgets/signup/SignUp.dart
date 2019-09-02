@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:galaxy/backend/AuthController.dart';
-import 'package:galaxy/models/User.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:galaxy/authenticator/bloc/register/bloc.dart';
 import 'package:galaxy/styles/Text_Style.dart';
 import 'package:galaxy/ui/widgets/splashScreen/SplashScreen.dart';
-import 'package:galaxy/utilities/Validator.dart';
 import 'package:toast/toast.dart';
 
 class SignUpWidget extends StatefulWidget {
@@ -19,39 +18,10 @@ class SignUpScreen extends State<StatefulWidget> {
 
   String errorEmailText, errorPasswordText, errorNameText;
 
-  Validator validator = new Validator();
-
+ 
   openSplashScreen(BuildContext context) {
     Navigator.pushReplacement(context,
         new MaterialPageRoute(builder: (context) => new SplashScreenWidget()));
-  }
-
-  onSignUpPressed() {
-    FocusScope.of(context).requestFocus(new FocusNode());
-    User user = new User("Null", emailController.text, passwordController.text);
-    errorEmailText = Validator.validateEmail(emailController.text);
-    errorPasswordText = Validator.validatePassword(passwordController.text);
-    if (errorEmailText == null &&
-        errorPasswordText == null &&
-        errorNameText == null) {
-      AuthController authController = new AuthController();
-      authController.createUser(user).catchError((error) {
-        print(error.message);
-      }).then((value) {
-        Toast.show(value.message, context,
-            gravity: Toast.BOTTOM,
-            duration: Toast.LENGTH_LONG,
-            textColor: Colors.redAccent);
-        if (value.succeeded) {
-          print(value.message);
-
-          Toast.show("You have signed up successfully!", context);
-          openSplashScreen(context);
-        } else {
-          print("Oh ! I got some error : " + value.message);
-        }
-      });
-    }
   }
 
   @override
@@ -102,10 +72,29 @@ class SignUpScreen extends State<StatefulWidget> {
     );
 
     return Scaffold(
-      body: new Stack(
-        children: <Widget>[
-          Center(
-            child: Container(
+      body: Center(
+        child: BlocProvider(
+          builder: (context) => RegistrationBloc(),
+          child: BlocBuilder<RegistrationBloc, RegistrationState>(
+              builder: (context, state) {
+            if (state is RegistrationSucceed) {
+              Toast.show(
+                "You have created an account successfully! ",
+                context,
+                gravity: Toast.BOTTOM,
+               );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+              openSplashScreen(context);
+            });
+            } else if (state is RegistrationFailure) {
+              Toast.show(
+                state.failureMessage,
+                context,
+                gravity: Toast.BOTTOM,
+                duration: Toast.LENGTH_LONG,
+              );
+            }
+            return Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/5.jpg"),
@@ -139,9 +128,7 @@ class SignUpScreen extends State<StatefulWidget> {
                         minWidth: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.fromLTRB(10, 7.5, 10, 7.5),
                         onPressed: () {
-                          setState(() {
-                            onSignUpPressed();
-                          });
+                              BlocProvider.of<RegistrationBloc>(context).dispatch(RegisterWithEmailAndPasswordEvent(emailController.text,passwordController.text));
                         },
                         child: Text("Create account",
                             textAlign: TextAlign.center,
@@ -151,7 +138,7 @@ class SignUpScreen extends State<StatefulWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 150.0,left: 24),
+                      padding: EdgeInsets.only(top: 150.0, left: 24),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
@@ -168,9 +155,9 @@ class SignUpScreen extends State<StatefulWidget> {
                   ],
                 ),
               ),
-            ),
-          ),
-        ],
+            );
+          }),
+        ),
       ),
     );
   }
