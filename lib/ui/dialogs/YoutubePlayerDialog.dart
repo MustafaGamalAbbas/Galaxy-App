@@ -8,7 +8,7 @@ class YoutubePlayerDialog extends StatelessWidget {
   });
   YoutubePlayerController _controller = YoutubePlayerController();
   void listener() {
-    if (_controller.value.playerState == PlayerState.ENDED) {
+    if (_controller.value.playerState == PlayerState.ended) {
       print("The Video is ended ");
     }
     /*if (mounted) {
@@ -29,20 +29,20 @@ class YoutubePlayerDialog extends StatelessWidget {
         backgroundColor: Colors.transparent,
         child: YoutubePlayer(
           context: context,
-          videoId: youtubeVideoId,
+          initialVideoId: youtubeVideoId,
           flags: YoutubePlayerFlags(
             autoPlay: true,
             showVideoProgressIndicator: true,
           ),
-          videoProgressIndicatorColor: Colors.cyan,
-          progressColors: ProgressColors(
+          progressIndicatorColor:  Colors.cyan,
+          progressColors: ProgressBarColors(
             playedColor: Colors.cyan,
             handleColor: Colors.cyanAccent,
           ),
           onPlayerInitialized: (controller) {
             _controller = controller;
             _controller.addListener(listener);
-          },
+          },  
         ),
       ),
     );

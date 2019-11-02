@@ -42,7 +42,7 @@ class SplashScreen extends State<StatefulWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        builder: (context) => FetchingSharedPreferenceBloc()..dispatch(BackGroundColor()),
+        builder: (context) => FetchingSharedPreferenceBloc()..add(BackGroundColor()),
         child: BlocBuilder<FetchingSharedPreferenceBloc, FetchingSharedPreferenceState>(
              builder: (context, state) {
               if (state is BackgroundSharedpreferenceState)

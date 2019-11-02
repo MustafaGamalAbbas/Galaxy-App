@@ -11,7 +11,7 @@ class NoInternetConnectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: BlocProvider(
-        builder: (context) => FetchingSharedPreferenceBloc()..dispatch(BackGroundColor()),
+        builder: (context) => FetchingSharedPreferenceBloc()..add(BackGroundColor()),
         child: BlocBuilder<FetchingSharedPreferenceBloc,
             FetchingSharedPreferenceState>(builder: (context, state) {
           if (state is BackgroundSharedpreferenceState)
@@ -113,7 +113,7 @@ class NoInternetConnectionWidget extends StatelessWidget {
               ],
             );
           else {
-            new Container(width: 0.0, height: 0.0);
+            return Container(width: 0.0, height: 0.0);
           }
         }),
       ),

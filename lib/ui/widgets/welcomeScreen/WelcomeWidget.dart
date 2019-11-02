@@ -31,7 +31,7 @@ class WelcomeScreen extends State<StatefulWidget> {
       title: 'Material App',
       home: Scaffold(
           body: PageIndicatorContainer(
-        pageView: new PageView(
+        child: new PageView(
           controller: _pageController,
           children: <Widget>[
             PageOneView("assets/images/7.jpg"),

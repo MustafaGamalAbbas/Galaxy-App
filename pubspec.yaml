@@ -17,27 +17,28 @@ environment:
   sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
+  flutter_settings: ^1.0.2
   dots_indicator: ^0.0.5
   youtube_player: ^3.5.0
-  youtube_player_flutter: ^4.1.0
+  youtube_player_flutter: ^5.2.0+1
+  firebase_core: ^0.4.0+9  # add dependency for Firebase Core
+  firebase_database: ^3.0.7
+  firebase_auth: 0.14.0+5
   flutter_colorpicker: ^0.2.6
-  firebase_core: ^0.4.0+8  # add dependency for Firebase Core
-  firebase_database: ^3.0.5
-  firebase_auth: ^0.14.0+2
-  flutter_facebook_login: 2.0.1
-  json_serializable: 3.1.0
-  google_sign_in: ^4.0.6
-  http: 0.12.0+2  
-  flutter_bloc: ^0.20.0
-  page_indicator: ^0.2.0
-  equatable: ^0.3.0
-  toast: 0.1.4
+  flutter_facebook_login: 3.0.0
+  json_serializable: 2.3.0
+  google_sign_in: ^4.0.11
+  http: ^0.12.0+2  
+  flutter_bloc: ^1.0.0
+  page_indicator: ^0.3.0
+  equatable: ^0.6.1
+  toast: ^0.1.5
   flutter_svg: ^0.14.0
-  shared_preferences: ^0.5.3+4
+  shared_preferences: ^0.5.4+3
   json_table: ^1.0.1
-  connectivity: ^0.4.3+7
+  connectivity: 0.4.5+2
   build_runner: ^1.0.0
-  json_annotation: ^2.0.0
+  json_annotation: ^2.3.0
   flutter:
     sdk: flutter
   

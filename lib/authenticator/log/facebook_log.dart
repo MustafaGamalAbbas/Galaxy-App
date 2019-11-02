@@ -11,7 +11,7 @@ class FacebookAuthLog extends BaseLog {
   @override
   Future<BaseLoginState> login() async {
     final result = await facebookLogin
-        .logInWithReadPermissions(['email', 'public_profile']);
+        .logIn(['email', 'public_profile']);
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:

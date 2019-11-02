@@ -4,12 +4,16 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class AuthenticationState extends Equatable {
-  AuthenticationState([List props = const []]) : super(props);
+  AuthenticationState([List props = const []]) : super();
 }
 
 class Uninitialized extends AuthenticationState {
   @override
   String toString() => 'Uninitialized';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
 }
 
 class Authenticated extends AuthenticationState {
@@ -17,11 +21,19 @@ class Authenticated extends AuthenticationState {
 
   Authenticated(this.user) : super([user]);
 
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+
 }
 
 class Unauthenticated extends AuthenticationState {
   @override
   String toString() => 'Unauthenticated';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
 
 }
 

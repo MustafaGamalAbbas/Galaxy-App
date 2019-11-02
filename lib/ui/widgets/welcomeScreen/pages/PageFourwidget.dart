@@ -212,7 +212,7 @@ class _PageFourViewState extends State<PageFourView>
                         fillColor: new Color(0xff00c6ff),
                         splashColor: new Color(0xFF3366FF),
                         onPressed: () {
-                          _savingBloc.dispatch(IsFirstTimeEvent(false));
+                          _savingBloc.add(IsFirstTimeEvent(false));
                           Navigator.pushReplacement(
                               context,
                               new MaterialPageRoute(

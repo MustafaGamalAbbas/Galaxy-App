@@ -4,18 +4,34 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class PlanetsState extends Equatable {
-  PlanetsState([List props = const []]) : super(props);
+  PlanetsState([List props = const []]) : super();
 }
 
-class InitialPlanetsState extends PlanetsState {}
+class InitialPlanetsState extends PlanetsState {
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
 
 class OnErrorDataState extends PlanetsState{
   final String errorMessage ;
-  OnErrorDataState(this.errorMessage); 
+  OnErrorDataState(this.errorMessage);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null; 
 }
 class OnReceiveDataState extends PlanetsState{
   final List<Planet> planets;
 
-  OnReceiveDataState(this.planets); 
+  OnReceiveDataState(this.planets);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null; 
 }
-class OnWaiting extends  PlanetsState {}
+class OnWaiting extends  PlanetsState {
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}

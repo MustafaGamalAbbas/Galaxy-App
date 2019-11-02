@@ -14,7 +14,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   _VideoPlayerWidgetState(this.youtubeVideoId);
   YoutubePlayerController _controller = YoutubePlayerController();
   void listener() {
-    if (_controller.value.playerState == PlayerState.ENDED) {
+    if (_controller.value.playerState == PlayerState.ended) {
       print("The Video is ended ");
     }
     if (mounted) {
@@ -34,20 +34,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       body: Container(
         child: YoutubePlayer(
           context: context,
-          videoId: youtubeVideoId,
+          initialVideoId: youtubeVideoId,
           flags: YoutubePlayerFlags(
             autoPlay: true,
             showVideoProgressIndicator: true,
           ),
-          videoProgressIndicatorColor: Colors.amber,
-          progressColors: ProgressColors(
+          progressIndicatorColor: Colors.amber,
+          
+           progressColors: ProgressBarColors(
             playedColor: Colors.amber,
             handleColor: Colors.amberAccent,
           ),
           onPlayerInitialized: (controller) {
             _controller = controller;
             _controller.addListener(listener);
-          },
+          },  
         ),
       ),
     );

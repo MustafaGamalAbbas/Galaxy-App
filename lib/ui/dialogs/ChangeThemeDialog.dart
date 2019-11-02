@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_colorpicker/material_picker.dart';
 import 'package:galaxy/bloc/fetchingSharedPreference/bloc.dart';
 import 'package:galaxy/bloc/savingToSharePreference/SavingToSharePreference_bloc.dart';
 import 'package:galaxy/bloc/savingToSharePreference/SavingToSharePreference_event.dart';
 import 'package:toast/toast.dart';
+import 'package:flutter_colorpicker/material_picker.dart';
 
 class ChangeThemeDialog extends StatefulWidget {
   ChangeThemeDialog({Key key}) : super(key: key);
 
-  _ChangeThemeDialogState createState() => _ChangeThemeDialogState();
+  ChangeThemeDialogState createState() => ChangeThemeDialogState();
 }
 
-class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
+class ChangeThemeDialogState extends State<StatefulWidget> {
+  ChangeThemeDialogState();
   int backgroundColor;
   int rightToolbarColor;
   int leftToolbarColor;
@@ -26,28 +27,30 @@ class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
   void changeBackgroundColor(Color color) {
      setState(() {
              backgroundColor = color.value;
-       _sharePreferenceBloc.dispatch(BackgroundColorEvent(color.value));
+       _sharePreferenceBloc.add(BackgroundColorEvent(color.value));
      });
   }
 
   void changeRightCornerToolbarColor(Color color) {
      setState(() {
       rightToolbarColor = color.value;
-      _sharePreferenceBloc.dispatch(RightColorBarEvent(color.value));
+      _sharePreferenceBloc.add(RightColorBarEvent(color.value));
     });
   }
 
   void changeLeftCornerToolbarColor(Color color) {
      setState(() {
       leftToolbarColor = color.value;
-      _sharePreferenceBloc.dispatch(LeftColorBarEvent(color.value));
+      _sharePreferenceBloc.add(LeftColorBarEvent(color.value));
     });
   }
 
-  openColorPickerDialog(Color currentColor, Function callback) {
+  void openColorPickerDialog(Color currentColor, Function callback) {
     showDialog(
       context: context,
-      child: AlertDialog(
+      
+      builder:(context){ 
+        return AlertDialog(
         title: const Text('Pick a color!'),
         content: SingleChildScrollView(
           /* child: ColorPicker(
@@ -58,7 +61,7 @@ class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
       ),*/
           // Use Material color picker:
           //
-          child: MaterialPicker(
+         child: MaterialPicker(
             pickerColor: currentColor,
             onColorChanged: callback,
             enableLabel: true, // only on portrait mode
@@ -66,7 +69,7 @@ class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
           //
           // Use Block color picker:
           //
-          /* child: BlockPicker(
+          /*child: BlockPicker(
         pickerColor: currentColor,
         onColorChanged: changeColor,
        ),*/
@@ -80,14 +83,14 @@ class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
             },
           ),
         ],
-      ),
+      );},
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      builder: (context) => FetchingSharedPreferenceBloc()..dispatch(GradientColor()),
+      builder: (context) => FetchingSharedPreferenceBloc()..add(GradientColor()),
       child: BlocBuilder<FetchingSharedPreferenceBloc,
           FetchingSharedPreferenceState>(builder: (context, state) {
         if (state is GradientColorsSharedpreferenceState) {
@@ -124,7 +127,7 @@ class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
                             ),
                             BlocProvider(
                               builder: (context) =>
-                                  FetchingSharedPreferenceBloc()..dispatch(BackGroundColor()),
+                                  FetchingSharedPreferenceBloc()..add(BackGroundColor()),
                               child: BlocBuilder<FetchingSharedPreferenceBloc,
                                   FetchingSharedPreferenceState>(
                                 builder: (context, _state) {
@@ -211,7 +214,7 @@ class _ChangeThemeDialogState extends State<ChangeThemeDialog> {
                 ))),
           );
         } else
-          return new Container();
+          return new Container(width: 0.0,height: 0.0,);
       }),
     );
   }

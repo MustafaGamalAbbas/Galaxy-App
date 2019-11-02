@@ -8,6 +8,7 @@ import 'package:galaxy/ui/widgets/home/HomeWidget.dart';
 import 'package:galaxy/ui/widgets/loginWidget/LoginWidget.dart';
 import 'package:galaxy/ui/widgets/noInternetConnection/NoInternetConnection.dart';
 import 'package:galaxy/ui/widgets/welcomeScreen/WelcomeWidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -58,17 +59,18 @@ class Home extends State<MyHomePage> {
     super.initState();
   }
 
+  
   @override
   Widget build(BuildContext context) {
     
-
+   // return ClippingViewTest();
     return BlocProvider(
         builder: (context) => InternetconnectionBloc(),
         child: BlocBuilder<InternetconnectionBloc, InternetconnectionState>(
             builder: (context, snapshot) {
           if (snapshot is Connected) {
             return BlocProvider(
-              builder: (context) => FetchingSharedPreferenceBloc()..dispatch(IsFirstTime()),
+              builder: (context) => FetchingSharedPreferenceBloc()..add(IsFirstTime()),
               child: BlocBuilder<FetchingSharedPreferenceBloc,
                   FetchingSharedPreferenceState>(builder: (context, state) {
                 if (state is FirstTimeSharedpreferenceState &&
@@ -77,16 +79,18 @@ class Home extends State<MyHomePage> {
                 else {
                   return BlocProvider(
                     builder: (context) =>
-                        AuthenticationBloc()..dispatch(CurrentStatus()),
+                        AuthenticationBloc()..add(CurrentStatus()),
                     child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                         builder: (context, status) {
                       if (status is Authenticated)
                         return HomeWidget();
-                      else
+                      else if( status is Unauthenticated)
                         return LoginWidget();
+                        else 
+                        return Container(width: 0.0,height: 0.0,);
                     }),
                   );
-                }
+                } 
               }),
             );
           } else if (snapshot is Disconnected) {

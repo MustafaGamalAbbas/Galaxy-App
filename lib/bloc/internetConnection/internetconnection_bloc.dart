@@ -8,7 +8,7 @@ class InternetconnectionBloc
 
  
     InternetconnectionBloc(){
-      this.dispatch(GetEvent());
+      this.add(GetEvent());
     }
   @override
   InternetconnectionState get initialState => Disconnected();

@@ -117,7 +117,7 @@ class LoginScreen extends State<StatefulWidget> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold), () {
                       FocusScope.of(context).requestFocus(new FocusNode());
-                      BlocProvider.of<LoginBloc>(context).dispatch(
+                      BlocProvider.of<LoginBloc>(context).add(
                           LoginWithEmailAndPasswordEvent(
                               emailController.text, passwordController.text));
                       /* User user = new User("Null", emailController.text,
@@ -155,7 +155,7 @@ class LoginScreen extends State<StatefulWidget> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold), () async {
                       BlocProvider.of<LoginBloc>(context)
-                          .dispatch(LoginWithFacebookEvent());
+                          .add(LoginWithFacebookEvent());
                     }),
                     SizedBox(
                       height: 15.0,
@@ -167,7 +167,7 @@ class LoginScreen extends State<StatefulWidget> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold), () {
                       BlocProvider.of<LoginBloc>(context)
-                          .dispatch(LoginWithGoogleEvent());
+                          .add(LoginWithGoogleEvent());
                     }),
                     SizedBox(
                       height: 15.0,

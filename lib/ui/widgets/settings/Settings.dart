@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_settings/widgets/SettingsButton.dart';
+import 'package:flutter_settings/widgets/SettingsIcon.dart';
 import 'package:galaxy/authenticator/bloc/auth/authentication_bloc.dart';
 import 'package:galaxy/authenticator/bloc/auth/authentication_event.dart';
 import 'package:galaxy/authenticator/bloc/auth/authentication_state.dart';
@@ -9,7 +11,6 @@ import 'package:galaxy/authenticator/bloc/logout/logout_state.dart';
 import 'package:galaxy/ui/dialogs/ChangeThemeDialog.dart';
 import 'package:galaxy/ui/widgets/loginWidget/LoginWidget.dart';
 import 'package:galaxy/ui/widgets/settings/ChangeThemeButton.dart';
-import 'package:galaxy/ui/widgets/settings/SettingsButton.dart';
 
 class Settings extends StatefulWidget {
   Settings({Key key}) : super(key: key);
@@ -48,29 +49,44 @@ class _SettingsState extends State<Settings> {
           }
           return Column(
             children: <Widget>[
-              ChangeThemeButton("Change Theme", Icons.track_changes, () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => ChangeThemeDialog());
-              }),
+              SettingsButton(
+                  title: "Change Theme",
+                  icon: SettingsIcon(
+                    icon: Icons.track_changes,
+                    color: Colors.black26,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => ChangeThemeDialog());
+                  }),
               BlocProvider(
                 builder: (context) =>
-                    AuthenticationBloc()..dispatch(CurrentStatus()),
+                    AuthenticationBloc()..add(CurrentStatus()),
                 child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                     builder: (context, status) {
                   if (status is Authenticated) {
-                    return SettingsButton(Icons.exit_to_app, "Log out",
-                        status.user.name ?? status.user.email, () async {
-                      BlocProvider.of<LogoutBloc>(context).dispatch(Logout());
-                     
-                    });
+                    return SettingsButton(
+                        icon: SettingsIcon(
+                          icon: Icons.exit_to_app,
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        title: "Log out",
+                        caption: status.user.name ?? status.user.email,
+                        onPressed: () async {
+                          BlocProvider.of<LogoutBloc>(context).add(Logout());
+                        });
                   } else {
                     return SettingsButton(
-                        Icons.exit_to_app, "Log out", "Not Authenticated",
-                        () async {
-                      BlocProvider.of<LogoutBloc>(context).dispatch(Logout());
-                       
-                    });
+                        icon: SettingsIcon(
+                          icon: Icons.exit_to_app,
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        title: "Log out",
+                        caption: "Not Authenticated",
+                        onPressed: () async {
+                          BlocProvider.of<LogoutBloc>(context).add(Logout());
+                        });
                   }
                 }),
               ),

@@ -128,7 +128,7 @@ class SignUpScreen extends State<StatefulWidget> {
                         minWidth: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.fromLTRB(10, 7.5, 10, 7.5),
                         onPressed: () {
-                              BlocProvider.of<RegistrationBloc>(context).dispatch(RegisterWithEmailAndPasswordEvent(emailController.text,passwordController.text));
+                              BlocProvider.of<RegistrationBloc>(context).add(RegisterWithEmailAndPasswordEvent(emailController.text,passwordController.text));
                         },
                         child: Text("Create account",
                             textAlign: TextAlign.center,
