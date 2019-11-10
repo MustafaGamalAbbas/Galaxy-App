@@ -11,7 +11,10 @@ description: Galaxy app
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.1
+versionName: 1.0
+versionCode: 2
+
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
@@ -39,6 +42,7 @@ dependencies:
   connectivity: 0.4.5+2
   build_runner: ^1.0.0
   json_annotation: ^2.3.0
+  flutter_launcher_icons: ^0.7.4
   flutter:
     sdk: flutter
   
@@ -56,7 +60,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+   
+  
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "assets/images/galaxyicon.png"
 
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

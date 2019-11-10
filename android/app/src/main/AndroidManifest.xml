@@ -9,8 +9,8 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="galaxy"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Galaxy"
+        android:icon="@mipmap/launcher_icon">
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>

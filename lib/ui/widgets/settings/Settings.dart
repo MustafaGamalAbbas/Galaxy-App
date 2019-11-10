@@ -43,6 +43,7 @@ class _SettingsState extends State<Settings> {
         builder: (context) => LogoutBloc(),
         child: BlocBuilder<LogoutBloc, LogoutState>(builder: (context, state) {
           if (state is LoggedOut) {
+            print("LoggedOut");
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _navigateToLoginWidget(context);
             });
@@ -53,7 +54,8 @@ class _SettingsState extends State<Settings> {
                   title: "Change Theme",
                   icon: SettingsIcon(
                     icon: Icons.track_changes,
-                    color: Colors.black26,
+                    
+                    backgroundColor: Colors.blueAccent,
                   ),
                   onPressed: () {
                     showDialog(
@@ -73,7 +75,8 @@ class _SettingsState extends State<Settings> {
                         ),
                         title: "Log out",
                         caption: status.user.name ?? status.user.email,
-                        onPressed: () async {
+                        onPressed: () {
+                          print("print()");
                           BlocProvider.of<LogoutBloc>(context).add(Logout());
                         });
                   } else {
@@ -84,7 +87,8 @@ class _SettingsState extends State<Settings> {
                         ),
                         title: "Log out",
                         caption: "Not Authenticated",
-                        onPressed: () async {
+                        onPressed: () {
+                          print("print()");
                           BlocProvider.of<LogoutBloc>(context).add(Logout());
                         });
                   }
